@@ -1,11 +1,15 @@
 'use strict';
 
-const React = require('react');
-const ReactScriptLoaderMixin = require('react-script-loader').ReactScriptLoaderMixin;
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-const PlaidLink = React.createClass({
+var React = require('react');
+var ReactScriptLoaderMixin = require('react-script-loader').ReactScriptLoaderMixin;
+
+var PlaidLink = React.createClass({
+  displayName: 'PlaidLink',
+
   mixins: [ReactScriptLoaderMixin],
-  getDefaultProps: function() {
+  getDefaultProps: function getDefaultProps() {
     return {
       institution: null,
       longtail: false,
@@ -16,8 +20,8 @@ const PlaidLink = React.createClass({
         outline: 'none',
         background: '#FFFFFF',
         border: '2px solid #F1F1F1',
-        borderRadius: '4px',
-      },
+        borderRadius: '4px'
+      }
     };
   },
   propTypes: {
@@ -40,7 +44,7 @@ const PlaidLink = React.createClass({
     publicKey: React.PropTypes.string.isRequired,
 
     // The Plaid product you wish to use, either auth or connect.
-    product: React.PropTypes.oneOf(['auth', 'connect',]).isRequired,
+    product: React.PropTypes.oneOf(['auth', 'connect']).isRequired,
 
     // Specify an existing user's public token to launch Link in update mode.
     // This will cause Link to open directly to the authentication step for
@@ -74,21 +78,21 @@ const PlaidLink = React.createClass({
     styles: React.PropTypes.object,
 
     // Button Class names as a String
-    className: React.PropTypes.string,
+    className: React.PropTypes.string
   },
-  getInitialState: function() {
+  getInitialState: function getInitialState() {
     return {
       disabledButton: true,
-      linkLoaded: false,
+      linkLoaded: false
     };
   },
-  getScriptURL: function() {
+  getScriptURL: function getScriptURL() {
     return 'https://cdn.plaid.com/link/stable/link-initialize.js';
   },
-  onScriptError: function() {
+  onScriptError: function onScriptError() {
     console.error('There was an issue loading the link-initialize.js script');
   },
-  onScriptLoaded: function() {
+  onScriptLoaded: function onScriptLoaded() {
     window.linkHandler = Plaid.create({
       clientName: this.props.clientName,
       env: this.props.env,
@@ -100,30 +104,35 @@ const PlaidLink = React.createClass({
       product: this.props.product,
       selectAccount: this.props.selectAccount,
       token: this.props.token,
-      webhook: this.props.webhook,
+      webhook: this.props.webhook
     });
 
-    this.setState({disabledButton: false});
+    this.setState({ disabledButton: false });
   },
-  handleLinkOnLoad: function() {
+  handleLinkOnLoad: function handleLinkOnLoad() {
     this.props.onLoad && this.props.onLoad();
-    this.setState({linkLoaded: true});
+    this.setState({ linkLoaded: true });
   },
-  handleOnClick: function() {
+  handleOnClick: function handleOnClick() {
     var institution = this.props.institution || null;
     if (window.linkHandler) {
-      this.linkHandler.open(institution);
+      window.linkHandler.open(institution);
     }
   },
-  render: function() {
-    return (
-      <button onClick={this.handleOnClick}
-              disabled={this.state.disabledButton}
-              {...this.props} >
-        <span>{this.props.buttonText}</span>
-      </button>
+  render: function render() {
+    return React.createElement(
+      'button',
+      _extends({ onClick: this.handleOnClick,
+        disabled: this.state.disabledButton
+      }, this.props),
+      React.createElement(
+        'span',
+        null,
+        this.props.buttonText
+      )
     );
   }
 });
 
 module.exports = PlaidLink;
+
